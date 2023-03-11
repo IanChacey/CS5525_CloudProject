@@ -21,6 +21,7 @@ namespace TimeKeepingApp.Models
         [Display(Name = "Employee Name")]
         public string EmployeeName { get; set; }
 
+        [Display(Name = "Hourly Wage")]
         public float HourlyWage { get; set; }
     }
 }
