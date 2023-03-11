@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TimeKeepingApp.Controllers
 {
@@ -20,12 +21,115 @@ namespace TimeKeepingApp.Controllers
         {
             _context = context;
         }
+        //public async Task<IActionResult> FilterIndex(string actFilter, string descFilter, string fromDate, string toDate, string pageNumber)
+        //{
+        //    // Get user claim
+        //    var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+        //    string userID = claim.Value;
+        //    var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+        //    // Parse date strings into date objects
+        //    DateTime tDate = DateTime.Parse(toDate).AddDays(1);
+
+        //    DateTime fDate = DateTime.Parse(fromDate);
+
+        //    IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
+        //        t => t.EmployeeID == user.Id
+        //        && t.ShiftStart >= fDate
+        //        && t.ShiftStart <= tDate).OrderByDescending(d => d.ShiftStart)
+        //                                            select t;
+
+        //    List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
+        //        .GroupBy(p => p.EmployeeID)
+        //        .Select(g => g.First())
+        //        .Select(x => new Employee { EmployeeID = x.EmployeeID })
+        //        .ToList();
+
+        //    //if (actFilter != "all")
+        //    //{
+        //    //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
+
+        //    //}
+        //    //if (!string.IsNullOrEmpty(descFilter))
+        //    //{
+        //    //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
+        //    //}
+
+        //    List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+        //    tDate = DateTime.Parse(toDate);
+
+        //    ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+        //        employees: employeeList,
+        //        shifts: sList,
+        //        start: fDate,
+        //        end: tDate
+        //        //desc: descFilter,
+        //        //page: int.Parse(pageNumber),
+        //        //acct: actFilter
+        //        );
+
+
+        //    return View("Index", vmod);//, vmod);
+        //}
 
         // GET: Shifts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Shift.ToListAsync());
+            //return View(await _context.Shift.ToListAsync());
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            // Parse date strings into date objects
+            //DateTime tDate = DateTime.Parse(toDate).AddDays(1);
+
+            //DateTime fDate = DateTime.Parse(fromDate);
+
+            IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
+                t => t.EmployeeID == user.Id)
+                                        select t;
+
+            List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+            List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
+                .GroupBy(p => p.EmployeeID)
+                .Select(g => g.First())
+                .Select(x => new Employee { EmployeeID = x.EmployeeID })
+                .ToList();
+
+            //if (actFilter != "all")
+            //{
+            //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
+
+            //}
+            //if (!string.IsNullOrEmpty(descFilter))
+            //{
+            //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
+            //}
+
+
+            //tDate = DateTime.Parse(toDate);
+
+            ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+                employees: employeeList,
+                shifts: sList
+                //start: fDate,
+                //end: tDate
+                //desc: descFilter,
+                //page: int.Parse(pageNumber),
+                //acct: actFilter
+                );
+
+
+            return View("Index", sList);//, vmod);
+
         }
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Shift.ToListAsync());
+        //}
 
         // GET: Shifts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -54,17 +158,36 @@ namespace TimeKeepingApp.Controllers
         // POST: Shifts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(shift);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(shift);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
+        public async Task<IActionResult> Create(DateTime shiftStart, DateTime shiftEnd, string location)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(shift);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(shift);
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            Shift s = new Shift();
+
+            s.EmployeeID = user.Id;
+            s.ShiftStart = shiftStart;
+            s.ShiftEnd = shiftEnd;
+            s.Location = location;
+
+            _context.Add(s);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Shifts/Edit/5

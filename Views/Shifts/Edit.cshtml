@@ -13,11 +13,11 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="EmployeeID" class="control-label"></label>
                 <input asp-for="EmployeeID" class="form-control" />
                 <span asp-validation-for="EmployeeID" class="text-danger"></span>
-            </div>
+            </div>*@
             @*<div class="form-group">
                 <label asp-for="Department" class="control-label"></label>
                 <input asp-for="Department" class="form-control" />
@@ -43,10 +43,11 @@
                 <input asp-for="ShiftEnd" class="form-control" />
                 <span asp-validation-for="ShiftEnd" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
+            <div>
+                <select class="form-control" id="Location" name="Location">
+                    <option>On-Site</option>
+                    <option>Remote</option>
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
