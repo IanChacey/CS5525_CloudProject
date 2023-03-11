@@ -12,7 +12,7 @@ namespace TimeKeepingApp.Models
         public int Id { get; set; }
 
         [Display(Name = "Employee ID Number")]
-        public int EmployeeID { get; set; }
+        public string EmployeeID { get; set; }
 
         [Display(Name = "Shift Starting Time")]
         public DateTime ShiftStart { get; set; }

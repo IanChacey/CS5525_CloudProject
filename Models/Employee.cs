@@ -12,7 +12,7 @@ namespace TimeKeepingApp.Models
         public int Id { get; set; }
 
         [Display(Name = "Employee ID Number")]
-        public int EmployeeID { get; set; }
+        public string EmployeeID { get; set; }
 
         public string? Department { get; set; }
 
