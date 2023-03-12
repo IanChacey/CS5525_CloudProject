@@ -22,14 +22,14 @@ namespace TimeKeepingApp.Models
 
         public string Location { get; set; }
 
-        public ShiftStatus Status { get; set; }
+        //public ShiftStatus Status { get; set; }
 
     }
 
-    public enum ShiftStatus
-    {
-        Pending,
-        Approved,
-        Rejected
-    }
+    //public enum ShiftStatus
+    //{
+    //    Pending,
+    //    Approved,
+    //    Rejected
+    //}
 }
