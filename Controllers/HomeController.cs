@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeKeepingApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TimeKeepingApp.Controllers
 {

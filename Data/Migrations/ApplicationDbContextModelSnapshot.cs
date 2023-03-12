@@ -265,6 +265,9 @@ namespace TimeKeepingApp.Data.Migrations
                     b.Property<DateTime>("ShiftStart")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Shift");
