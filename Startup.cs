@@ -38,6 +38,14 @@ namespace TimeKeepingApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ReadPolicy",
+                    builder => builder.RequireRole("Admin", "Manager", "User"));
+                options.AddPolicy("WritePolicy",
+                    builder => builder.RequireRole("Admin", "Manager"));
+            });
         }
 
         

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeKeepingApp.Controllers
 {
-    [Authorize]//(Roles = "Manager")]
+    [Authorize(Roles = "Manager")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
