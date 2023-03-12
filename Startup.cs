@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using TimeKeepingApp.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace TimeKeepingApp
 {
@@ -46,6 +48,8 @@ namespace TimeKeepingApp
                 options.AddPolicy("WritePolicy",
                     builder => builder.RequireRole("Admin", "Manager"));
             });
+
+            services.AddScoped<EmailSender>();
         }
 
         
