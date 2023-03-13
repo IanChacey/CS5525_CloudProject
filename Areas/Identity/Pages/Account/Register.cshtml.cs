@@ -89,16 +89,20 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
         {
 
             returnUrl = returnUrl ?? Url.Content("~/");
-            var role = _roleManager.FindByIdAsync(Input.RoleName).Result;
+            var role = _roleManager.FindByNameAsync("Admin").Result;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                var roleResult = await _userManager.AddToRoleAsync(user, role.Name);
+
+
                 var employee = new Employee();
 
                 employee.EmployeeID = user.Id;
-                employee.Role = "Retail";
+                //employee.Role = _userManager.GetRolesAsync(user).ToString();
+                employee.Role = role.Name;
                 employee.EmployeeName = Input.EmployeeName;
                 employee.HourlyWage = 0.00f;
 
