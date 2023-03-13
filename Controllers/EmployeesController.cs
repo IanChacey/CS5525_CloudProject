@@ -35,15 +35,15 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Employees/Details/5
-        public async Task<IActionResult> Details(string? eid)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (eid == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeID == eid);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -63,7 +63,7 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(string? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -96,11 +96,9 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string eid, string dep, string role, string name, string wage)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
-            var employee = await _context.Employee.FindAsync(eid);
-
-            if (eid != employee.EmployeeID)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -109,20 +107,20 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    employee.Department = dep;
+                    //employee.Department = dep;
 
-                    var roleRemove = await _userManager.RemoveFromRoleAsync(_userManager.FindByIdAsync(eid).Result, employee.Role);
-                    employee.Role =  role;
+                    //var roleRemove = await _userManager.RemoveFromRoleAsync(_userManager.FindByIdAsync(eid).Result, employee.Role);
+                    //employee.Role = role;
 
-                    var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(eid).Result, role);
-                    
+                    //var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(eid).Result, role);
+
 
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.EmployeeID))
+                    if (!EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -137,16 +135,15 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(string? eid)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (eid == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeID == eid);
-
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -158,17 +155,17 @@ namespace TimeKeepingApp.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string eid)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employee.FindAsync(eid);
+            var employee = await _context.Employee.FindAsync(id);
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(string id)
+        private bool EmployeeExists(int id)
         {
-            return _context.Employee.Any(e => e.EmployeeID == id);
+            return _context.Employee.Any(e => e.Id == id);
         }
     }
 }
