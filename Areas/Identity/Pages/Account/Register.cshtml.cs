@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
+using TimeKeepingApp.Services;
 
 namespace TimeKeepingApp.Areas.Identity.Pages.Account
 {
@@ -29,6 +30,7 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly EmailSender _sender;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -36,7 +38,8 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             ApplicationDbContext context,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+                EmailSender sender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,6 +47,7 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _context = context;
             _roleManager = roleManager;
+            _sender = sender;
         }
 
         [BindProperty]
@@ -123,8 +127,12 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    _sender.sendEmail(Input.Email, $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+
+
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
