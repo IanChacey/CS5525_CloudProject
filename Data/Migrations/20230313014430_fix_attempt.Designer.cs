@@ -10,8 +10,8 @@ using TimeKeepingApp.Data;
 namespace TimeKeepingApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230311214500_change to eid")]
-    partial class changetoeid
+    [Migration("20230313014430_fix_attempt")]
+    partial class fix_attempt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
