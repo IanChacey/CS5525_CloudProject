@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace TimeKeepingApp.Models
 {
     public class Employee
     {
+        public int Id { get; set; }
+
         [Display(Name = "Employee ID Number")]
         public string EmployeeID { get; set; }
 
