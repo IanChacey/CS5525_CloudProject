@@ -168,6 +168,8 @@ namespace TimeKeepingApp.Controllers
             string userID = claim.Value;
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
 
+            Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
+
             Shift ongoing = await _context.Shift.Where(u => u.EmployeeID == userID
             && u.Status == ShiftStatus.Ongoing)
                 .FirstOrDefaultAsync();
@@ -179,6 +181,7 @@ namespace TimeKeepingApp.Controllers
 
             Shift s = new Shift();
 
+            s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = DateTime.Now;
             s.ShiftEnd = null;
@@ -259,6 +262,9 @@ namespace TimeKeepingApp.Controllers
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
             Shift s = new Shift();
 
+            Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
+
+            s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = shiftStart;
             s.ShiftEnd = shiftEnd;

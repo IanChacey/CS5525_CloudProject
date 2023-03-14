@@ -111,6 +111,8 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
 
                 var employee = new Employee();
 
+                Random rnd = new Random();
+                employee.Id = rnd.Next();
                 employee.EmployeeID = user.Id;
                 //employee.Role = _userManager.GetRolesAsync(user).ToString();
                 employee.Role = role.Name;
