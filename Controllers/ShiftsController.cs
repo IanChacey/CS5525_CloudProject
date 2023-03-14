@@ -155,6 +155,85 @@ namespace TimeKeepingApp.Controllers
             return View();
         }
 
+        public IActionResult ClockIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClockIn(String location)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            Shift ongoing = await _context.Shift.Where(u => u.EmployeeID == userID
+            && u.Status == ShiftStatus.Ongoing)
+                .FirstOrDefaultAsync();
+
+            if (ongoing != null)
+            {
+                ModelState.AddModelError("", "You are already clocked in");
+            }
+
+            Shift s = new Shift();
+
+            s.EmployeeID = user.Id;
+            s.ShiftStart = DateTime.Now;
+            s.ShiftEnd = null;
+            s.Location = location;
+            s.Status = ShiftStatus.Ongoing;
+
+            
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(s);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(s);
+        }
+
+        public IActionResult ClockOut()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClockOut(string location)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            Shift s = await _context.Shift.Where(u => u.EmployeeID == userID
+            && u.Status == ShiftStatus.Ongoing)
+                .FirstOrDefaultAsync();
+
+
+            if (s != null)
+            {
+                //s.EmployeeID = user.Id;
+                //s.ShiftStart = DateTime.Now;
+                s.ShiftEnd = DateTime.Now;
+                //s.Location = location;
+                s.Status = ShiftStatus.Pending;
+            }
+            else
+            {
+                ModelState.AddModelError("", "You are not currently clocked in");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+
         // POST: Shifts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -201,6 +280,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Shifts/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -221,6 +301,7 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
         {
             if (id != shift.Id)
@@ -261,6 +342,12 @@ namespace TimeKeepingApp.Controllers
 
             var shift = await _context.Shift
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (shift.Status == ShiftStatus.Approved)
+            {
+                ModelState.AddModelError(nameof(shift.Status), "You cannot delete approved shifts");
+            }
+
             if (shift == null)
             {
                 return NotFound();
@@ -274,10 +361,20 @@ namespace TimeKeepingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var shift = await _context.Shift.FindAsync(id);
-            _context.Shift.Remove(shift);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            //if ( < shiftStart)
+            //{
+            //    ModelState.AddModelError(nameof(shiftEnd), "Shift End cannot be before Shift Start");
+            //}
+
+            if (ModelState.IsValid)
+            {
+                var shift = await _context.Shift.FindAsync(id);
+                _context.Shift.Remove(shift);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Index");
         }
 
         private bool ShiftExists(int id)

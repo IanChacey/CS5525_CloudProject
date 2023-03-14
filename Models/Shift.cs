@@ -20,7 +20,7 @@ namespace TimeKeepingApp.Models
 
         [ShiftEnd]
         [Display(Name = "Shift Ending Time")]
-        public DateTime ShiftEnd { get; set; }
+        public DateTime? ShiftEnd { get; set; }
 
         [Required]
         [StringLength(15, MinimumLength = 1, ErrorMessage = "Location must be between 1 and 15 characters")]
@@ -34,6 +34,7 @@ namespace TimeKeepingApp.Models
     {
         Pending,
         Approved,
-        Rejected
+        Rejected,
+        Ongoing
     }
 }

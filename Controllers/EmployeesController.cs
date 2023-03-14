@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace TimeKeepingApp.Controllers
 {
-    [Authorize(Roles = "Manager, Admin")]
+    
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -34,6 +34,7 @@ namespace TimeKeepingApp.Controllers
             return View(await _context.Employee.ToListAsync());
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -52,6 +53,7 @@ namespace TimeKeepingApp.Controllers
             return View(employee);
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         // GET: Employees/Create
         public IActionResult Create()
         {
@@ -63,6 +65,7 @@ namespace TimeKeepingApp.Controllers
         // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Department,Role,EmployeeName,HourlyWage")] Employee employee)
@@ -79,6 +82,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +102,7 @@ namespace TimeKeepingApp.Controllers
         // POST: Employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, string eid, [Bind("Department, Role, EmployeeName, HourlyWage")] Employee emp)//[Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
@@ -141,6 +146,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // GET: Employees/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -159,6 +165,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // POST: Employees/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

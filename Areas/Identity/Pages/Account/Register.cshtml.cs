@@ -100,7 +100,7 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
         {
 
             returnUrl = returnUrl ?? Url.Content("~/");
-            var role = _roleManager.FindByNameAsync("Admin").Result;
+            var role = _roleManager.FindByNameAsync("User").Result;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -115,6 +115,8 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
                 //employee.Role = _userManager.GetRolesAsync(user).ToString();
                 employee.Role = role.Name;
                 employee.EmployeeName = Input.EmployeeName;
+                employee.EmployeeLastName = Input.EmployeeLastName;
+                employee.Department = "None";
                 employee.HourlyWage = 0.00f;
 
                 _context.Add(employee);
