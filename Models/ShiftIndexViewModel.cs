@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@ namespace TimeKeepingApp.Models
     {
         public List<Shift> sList { get; set; }
         public List<Employee> employeeList { get; set; }
+
+        [Required]
         public DateTime fromDate { get; set; }
         public DateTime toDate { get; set; }
         //public string descSearch { get; set; }
