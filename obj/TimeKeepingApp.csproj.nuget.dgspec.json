@@ -67,6 +67,10 @@
               "target": "Package",
               "version": "[3.1.5, )"
             },
+            "bootstrap": {
+              "target": "Package",
+              "version": "[5.2.3, )"
+            },
             "mailkit": {
               "target": "Package",
               "version": "[3.6.0, )"
