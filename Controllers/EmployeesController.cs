@@ -8,17 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace TimeKeepingApp.Controllers
 {
-    [Authorize]
+    
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EmployeesController(ApplicationDbContext context)
+        public EmployeesController(ApplicationDbContext context,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // GET: Employees
@@ -27,6 +34,7 @@ namespace TimeKeepingApp.Controllers
             return View(await _context.Employee.ToListAsync());
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,18 +53,22 @@ namespace TimeKeepingApp.Controllers
             return View(employee);
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         // GET: Employees/Create
         public IActionResult Create()
         {
+            ViewData["roles"] = _roleManager.Roles.ToList();
+
             return View();
         }
 
         // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -64,16 +76,20 @@ namespace TimeKeepingApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["roles"] = _roleManager.Roles.ToList();
+
             return View(employee);
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            ViewData["roles"] = _roleManager.Roles.ToList();
 
             var employee = await _context.Employee.FindAsync(id);
             if (employee == null)
@@ -86,11 +102,15 @@ namespace TimeKeepingApp.Controllers
         // POST: Employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Edit(int id, string eid, [Bind("Department, Role, EmployeeName, HourlyWage")] Employee emp)//[Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
-            if (id != employee.Id)
+            Employee old = await _context.Employee.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            emp.Id = old.Id;
+            emp.EmployeeID = old.EmployeeID;
+            if (id != emp.Id)
             {
                 return NotFound();
             }
@@ -99,12 +119,19 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    //emp.Department = dep;
+                    var user = _userManager.FindByIdAsync(emp.EmployeeID).Result;
+                    var roleRemove = await _userManager.RemoveFromRoleAsync(user, old.Role);
+                    //emp.Role = role;
+                    var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(emp.EmployeeID).Result, _roleManager.FindByIdAsync(emp.Role).Result.Name);
+
+
+                    _context.Update(emp);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!EmployeeExists(emp.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +142,11 @@ namespace TimeKeepingApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(emp);
         }
 
         // GET: Employees/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +165,7 @@ namespace TimeKeepingApp.Controllers
         }
 
         // POST: Employees/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

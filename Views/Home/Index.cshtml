@@ -4,5 +4,8 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Please Login or Register</a>.</p>
+    @if(!User.Identity.IsAuthenticated)
+     {
+         <h3>Please Login or Register</h3>
+     }
 </div>

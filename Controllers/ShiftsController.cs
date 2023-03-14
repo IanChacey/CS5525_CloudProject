@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TimeKeepingApp.Controllers
 {
@@ -20,12 +21,115 @@ namespace TimeKeepingApp.Controllers
         {
             _context = context;
         }
+        //public async Task<IActionResult> FilterIndex(string actFilter, string descFilter, string fromDate, string toDate, string pageNumber)
+        //{
+        //    // Get user claim
+        //    var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+        //    string userID = claim.Value;
+        //    var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+        //    // Parse date strings into date objects
+        //    DateTime tDate = DateTime.Parse(toDate).AddDays(1);
+
+        //    DateTime fDate = DateTime.Parse(fromDate);
+
+        //    IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
+        //        t => t.EmployeeID == user.Id
+        //        && t.ShiftStart >= fDate
+        //        && t.ShiftStart <= tDate).OrderByDescending(d => d.ShiftStart)
+        //                                            select t;
+
+        //    List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
+        //        .GroupBy(p => p.EmployeeID)
+        //        .Select(g => g.First())
+        //        .Select(x => new Employee { EmployeeID = x.EmployeeID })
+        //        .ToList();
+
+        //    //if (actFilter != "all")
+        //    //{
+        //    //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
+
+        //    //}
+        //    //if (!string.IsNullOrEmpty(descFilter))
+        //    //{
+        //    //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
+        //    //}
+
+        //    List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+        //    tDate = DateTime.Parse(toDate);
+
+        //    ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+        //        employees: employeeList,
+        //        shifts: sList,
+        //        start: fDate,
+        //        end: tDate
+        //        //desc: descFilter,
+        //        //page: int.Parse(pageNumber),
+        //        //acct: actFilter
+        //        );
+
+
+        //    return View("Index", vmod);//, vmod);
+        //}
 
         // GET: Shifts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Shift.ToListAsync());
+            //return View(await _context.Shift.ToListAsync());
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            // Parse date strings into date objects
+            //DateTime tDate = DateTime.Parse(toDate).AddDays(1);
+
+            //DateTime fDate = DateTime.Parse(fromDate);
+
+            IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
+                t => t.EmployeeID == user.Id)
+                                        select t;
+
+            List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+            List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
+                .GroupBy(p => p.EmployeeID)
+                .Select(g => g.First())
+                .Select(x => new Employee { EmployeeID = x.EmployeeID })
+                .ToList();
+
+            //if (actFilter != "all")
+            //{
+            //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
+
+            //}
+            //if (!string.IsNullOrEmpty(descFilter))
+            //{
+            //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
+            //}
+
+
+            //tDate = DateTime.Parse(toDate);
+
+            ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+                employees: employeeList,
+                shifts: sList
+                //start: fDate,
+                //end: tDate
+                //desc: descFilter,
+                //page: int.Parse(pageNumber),
+                //acct: actFilter
+                );
+
+
+            return View("Index", sList);//, vmod);
+
         }
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Shift.ToListAsync());
+        //}
 
         // GET: Shifts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -51,23 +155,132 @@ namespace TimeKeepingApp.Controllers
             return View();
         }
 
-        // POST: Shifts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public IActionResult ClockIn()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
+        public async Task<IActionResult> ClockIn(String location)
         {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            Shift ongoing = await _context.Shift.Where(u => u.EmployeeID == userID
+            && u.Status == ShiftStatus.Ongoing)
+                .FirstOrDefaultAsync();
+
+            if (ongoing != null)
+            {
+                ModelState.AddModelError("", "You are already clocked in");
+            }
+
+            Shift s = new Shift();
+
+            s.EmployeeID = user.Id;
+            s.ShiftStart = DateTime.Now;
+            s.ShiftEnd = null;
+            s.Location = location;
+            s.Status = ShiftStatus.Ongoing;
+
+            
+
             if (ModelState.IsValid)
             {
-                _context.Add(shift);
+                _context.Add(s);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(shift);
+            return View(s);
+        }
+
+        public IActionResult ClockOut()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClockOut(string location)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            Shift s = await _context.Shift.Where(u => u.EmployeeID == userID
+            && u.Status == ShiftStatus.Ongoing)
+                .FirstOrDefaultAsync();
+
+
+            if (s != null)
+            {
+                //s.EmployeeID = user.Id;
+                //s.ShiftStart = DateTime.Now;
+                s.ShiftEnd = DateTime.Now;
+                //s.Location = location;
+                s.Status = ShiftStatus.Pending;
+            }
+            else
+            {
+                ModelState.AddModelError("", "You are not currently clocked in");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+
+        // POST: Shifts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(shift);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(shift);
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(DateTime shiftStart, DateTime shiftEnd, string location)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            Shift s = new Shift();
+
+            s.EmployeeID = user.Id;
+            s.ShiftStart = shiftStart;
+            s.ShiftEnd = shiftEnd;
+            s.Location = location;
+            s.Status = ShiftStatus.Pending;
+
+            if (shiftEnd < shiftStart)
+            {
+                ModelState.AddModelError(nameof(shiftEnd), "Shift End cannot be before Shift Start");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(s);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+                return View();
         }
 
         // GET: Shifts/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,6 +301,7 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
         {
             if (id != shift.Id)
@@ -128,6 +342,12 @@ namespace TimeKeepingApp.Controllers
 
             var shift = await _context.Shift
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (shift.Status == ShiftStatus.Approved)
+            {
+                ModelState.AddModelError(nameof(shift.Status), "You cannot delete approved shifts");
+            }
+
             if (shift == null)
             {
                 return NotFound();
@@ -141,10 +361,45 @@ namespace TimeKeepingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var shift = await _context.Shift.FindAsync(id);
-            _context.Shift.Remove(shift);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            //if ( < shiftStart)
+            //{
+            //    ModelState.AddModelError(nameof(shiftEnd), "Shift End cannot be before Shift Start");
+            //}
+
+            if (ModelState.IsValid)
+            {
+                var shift = await _context.Shift.FindAsync(id);
+                _context.Shift.Remove(shift);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            Shift s = await _context.Shift.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (s.Status == ShiftStatus.Approved)
+            {
+                ModelState.AddModelError("", "This Shift is already approved");
+                return View();
+            }
+            else if (s.Status == ShiftStatus.Ongoing)
+            {
+                ModelState.AddModelError("", "This Shift is still ongoing");
+                return View();
+            }
+
+            s.Status = ShiftStatus.Approved;
+
+            return View();
         }
 
         private bool ShiftExists(int id)

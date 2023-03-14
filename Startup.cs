@@ -13,7 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
-
+using Microsoft.AspNetCore.Authorization;
+using TimeKeepingApp.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace TimeKeepingApp
 {
@@ -33,11 +35,21 @@ namespace TimeKeepingApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ReadPolicy",
+                    builder => builder.RequireRole("Admin", "Manager", "User"));
+                options.AddPolicy("WritePolicy",
+                    builder => builder.RequireRole("Admin", "Manager"));
+            });
+
+            services.AddScoped<EmailSender>();
         }
 
         
