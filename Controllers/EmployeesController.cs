@@ -55,6 +55,8 @@ namespace TimeKeepingApp.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            ViewData["roles"] = _roleManager.Roles.ToList();
+
             return View();
         }
 
@@ -63,7 +65,7 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -71,6 +73,8 @@ namespace TimeKeepingApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["roles"] = _roleManager.Roles.ToList();
+
             return View(employee);
         }
 
@@ -96,9 +100,12 @@ namespace TimeKeepingApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Edit(int id, string eid, [Bind("Department, Role, EmployeeName, HourlyWage")] Employee emp)//[Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
-            if (id != employee.Id)
+            Employee old = await _context.Employee.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            emp.Id = old.Id;
+            emp.EmployeeID = old.EmployeeID;
+            if (id != emp.Id)
             {
                 return NotFound();
             }
@@ -107,20 +114,19 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    //employee.Department = dep;
+                    //emp.Department = dep;
+                    var user = _userManager.FindByIdAsync(emp.EmployeeID).Result;
+                    var roleRemove = await _userManager.RemoveFromRoleAsync(user, old.Role);
+                    //emp.Role = role;
+                    var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(emp.EmployeeID).Result, _roleManager.FindByIdAsync(emp.Role).Result.Name);
 
-                    //var roleRemove = await _userManager.RemoveFromRoleAsync(_userManager.FindByIdAsync(eid).Result, employee.Role);
-                    //employee.Role = role;
 
-                    //var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(eid).Result, role);
-
-
-                    _context.Update(employee);
+                    _context.Update(emp);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!EmployeeExists(emp.Id))
                     {
                         return NotFound();
                     }
@@ -131,7 +137,7 @@ namespace TimeKeepingApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(emp);
         }
 
         // GET: Employees/Delete/5

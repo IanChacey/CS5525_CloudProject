@@ -75,8 +75,15 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required]
             [Display(Name = "First Name")]
+            [StringLength(20, MinimumLength = 1, ErrorMessage = "First Name must be between 1 and 20 characters")]
             public string EmployeeName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            [StringLength(20, MinimumLength = 1, ErrorMessage = "Last Name must be between 1 and 20 characters")]
+            public string EmployeeLastName { get; set; }
 
             [Display(Name = "Role")]
             public string RoleName { get; set; }

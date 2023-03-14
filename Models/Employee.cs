@@ -14,13 +14,26 @@ namespace TimeKeepingApp.Models
         [Display(Name = "Employee ID Number")]
         public string EmployeeID { get; set; }
 
+        [Required]
+        [StringLength(15, MinimumLength = 1, ErrorMessage = "Department must be between 1 and 15 characters")]
         public string? Department { get; set; }
 
+        [Required]
         public string Role { get; set; }
 
-        [Display(Name = "Employee Name")]
+        public string RoleName { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        [StringLength(20, MinimumLength = 1, ErrorMessage = "First Name must be between 1 and 20 characters")]
         public string EmployeeName { get; set; }
 
+        [Required]
+        [Display(Name = "Last Name")]
+        [StringLength(20, MinimumLength = 1, ErrorMessage = "Last Name must be between 1 and 20 characters")]
+        public string EmployeeLastName { get; set; }
+
+        [Required]
         [Display(Name = "Hourly Wage")]
         public float HourlyWage { get; set; }
     }

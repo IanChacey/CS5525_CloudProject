@@ -184,10 +184,20 @@ namespace TimeKeepingApp.Controllers
             s.ShiftStart = shiftStart;
             s.ShiftEnd = shiftEnd;
             s.Location = location;
+            s.Status = ShiftStatus.Pending;
 
-            _context.Add(s);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (shiftEnd < shiftStart)
+            {
+                ModelState.AddModelError(nameof(shiftEnd), "Shift End cannot be before Shift Start");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(s);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+                return View();
         }
 
         // GET: Shifts/Edit/5
