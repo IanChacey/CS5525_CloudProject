@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeKeepingApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TimeKeepingApp.Controllers
 {
@@ -24,6 +25,11 @@ namespace TimeKeepingApp.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Dashboard()
         {
             return View();
         }
