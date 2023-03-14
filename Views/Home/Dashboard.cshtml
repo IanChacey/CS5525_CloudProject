@@ -9,17 +9,17 @@
 @if (User.Identity.IsAuthenticated)
 {
     <div class="d-flex justify-content-center">
-        <a asp-area="" asp-controller="Shift" asp-action="ClockIn">
+        <a asp-area="" asp-controller="Shifts" asp-action="ClockIn">
             <div class="icon-container d-inline-block text-center red-shadow">
-                <p class="dash-heading font-weight-bold">Notifications</p>
+                <p class="dash-heading font-weight-bold">Clock In</p>
                 <i class="fas fa-bell dash-icon d-block"></i>
             </div>
         </a>
-        </div>
+    </div>
 }
 
 
-        @*<a asp-area="" asp-controller="Transactions" asp-action="Index">
+        <a asp-area="" asp-controller="Shifts" asp-action="Clock Out">
                     <div class="icon-container d-inline-block text-center green-shadow">
                         <p class="dash-heading font-weight-bold">History</p>
                         <i class="fas fa-history dash-icon d-block"></i>
@@ -53,6 +53,6 @@
                     <div class="icon-container d-inline-block text-center blue-shadow">
                         <p class="dash-heading font-weight-bold">Account</p>
                         <i class="fas fa-user dash-icon d-block"></i>
-                    </div>*@
+                    </div>
         </a>
     </div>

@@ -377,6 +377,31 @@ namespace TimeKeepingApp.Controllers
             return View("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            Shift s = await _context.Shift.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (s.Status == ShiftStatus.Approved)
+            {
+                ModelState.AddModelError("", "This Shift is already approved");
+                return View();
+            }
+            else if (s.Status == ShiftStatus.Ongoing)
+            {
+                ModelState.AddModelError("", "This Shift is still ongoing");
+                return View();
+            }
+
+            s.Status = ShiftStatus.Approved;
+
+            return View();
+        }
+
         private bool ShiftExists(int id)
         {
             return _context.Shift.Any(e => e.Id == id);
