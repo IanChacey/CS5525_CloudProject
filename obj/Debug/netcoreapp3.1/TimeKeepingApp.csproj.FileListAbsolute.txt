@@ -229,3 +229,4 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shifts\ClockIn.cshtml.g.cs
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shifts\ClockOut.cshtml.g.cs
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Home\Dashboard.cshtml.g.cs
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shifts\ManagerShifts.cshtml.g.cs
