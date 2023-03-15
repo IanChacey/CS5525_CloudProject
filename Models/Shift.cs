@@ -9,6 +9,7 @@ namespace TimeKeepingApp.Models
 {
     public class Shift
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Display(Name = "Employee ID Number")]

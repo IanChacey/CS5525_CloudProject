@@ -9,6 +9,7 @@ using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace TimeKeepingApp.Controllers
 {
@@ -16,10 +17,13 @@ namespace TimeKeepingApp.Controllers
     public class ShiftsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ShiftsController(ApplicationDbContext context)
+        public ShiftsController(ApplicationDbContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         //public async Task<IActionResult> FilterIndex(string actFilter, string descFilter, string fromDate, string toDate, string pageNumber)
         //{
@@ -166,7 +170,11 @@ namespace TimeKeepingApp.Controllers
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string userID = claim.Value;
-            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            var user = await _userManager.GetUserAsync(User);//await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+
+
+            Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
 
             Shift ongoing = await _context.Shift.Where(u => u.EmployeeID == userID
             && u.Status == ShiftStatus.Ongoing)
@@ -179,6 +187,7 @@ namespace TimeKeepingApp.Controllers
 
             Shift s = new Shift();
 
+            //s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = DateTime.Now;
             s.ShiftEnd = null;
@@ -190,7 +199,7 @@ namespace TimeKeepingApp.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(s);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(s);
@@ -259,6 +268,9 @@ namespace TimeKeepingApp.Controllers
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
             Shift s = new Shift();
 
+            Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
+
+            //s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = shiftStart;
             s.ShiftEnd = shiftEnd;
