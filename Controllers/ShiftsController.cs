@@ -130,6 +130,42 @@ namespace TimeKeepingApp.Controllers
 
         }
 
+        public async Task<IActionResult> ManagerShifts()
+        {
+            //return View(await _context.Shift.ToListAsync());
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            // Parse date strings into date objects
+            //DateTime tDate = DateTime.Parse(toDate).AddDays(1);
+
+            //DateTime fDate = DateTime.Parse(fromDate);
+
+            IQueryable<Shift> ShiftIQ = from t in _context.Shift.OrderByDescending(p => p.ShiftStart)
+                                        select t;
+
+            List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+            IQueryable<Employee> EmployeeIQ = from e in _context.Employee select e;
+
+            List<Employee> employeeList = await EmployeeIQ.AsNoTracking().ToListAsync();
+
+            ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+                employees: employeeList,
+                shifts: sList
+                //start: fDate,
+                //end: tDate
+                //desc: descFilter,
+                //page: int.Parse(pageNumber),
+                //acct: actFilter
+                );
+
+
+            return View("ManagerShifts", sList);//, vmod);
+
+        }
+
         //public async Task<IActionResult> Index()
         //{
         //    return View(await _context.Shift.ToListAsync());
