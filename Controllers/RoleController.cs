@@ -51,7 +51,7 @@ namespace TimeKeepingApp.Controllers
             return View(uList);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]//(Roles = "Admin")]
         public IActionResult Create()
         {
             return View(new IdentityRole());
