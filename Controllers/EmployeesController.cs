@@ -105,11 +105,11 @@ namespace TimeKeepingApp.Controllers
         [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string eid, [Bind("Department, Role, EmployeeName, HourlyWage")] Employee emp)//[Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
+        public async Task<IActionResult> Edit(int id, string eid, [Bind("Id, EmployeeID, Department, Role, EmployeeName, EmployeeLastName, HourlyWage")] Employee emp)//[Bind("Id,EmployeeID,Department,Role,EmployeeName,HourlyWage")] Employee employee)
         {
-            Employee old = await _context.Employee.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            emp.Id = old.Id;
-            emp.EmployeeID = old.EmployeeID;
+            Employee old = await _context.Employee.FindAsync(id);
+            _context.Attach(old);
+            
             if (id != emp.Id)
             {
                 return NotFound();
@@ -119,14 +119,20 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    //emp.Department = dep;
+                    emp.EmployeeID = old.EmployeeID;
                     var user = _userManager.FindByIdAsync(emp.EmployeeID).Result;
                     var roleRemove = await _userManager.RemoveFromRoleAsync(user, old.Role);
                     //emp.Role = role;
                     var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(emp.EmployeeID).Result, _roleManager.FindByIdAsync(emp.Role).Result.Name);
 
+                    old.Department = emp.Department;
+                    old.EmployeeLastName = emp.EmployeeLastName;
+                    old.EmployeeName = emp.EmployeeName;
+                    old.HourlyWage = emp.HourlyWage;
+                    old.Role = emp.Role;
+                    old.RoleName = _roleManager.FindByIdAsync(old.Role).Result.Name;
 
-                    _context.Update(emp);
+                    //_context.Update(emp);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

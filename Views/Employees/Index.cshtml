@@ -29,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.Department)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.DisplayNameFor(model => model.RoleName)
             </th>
 
             @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
@@ -59,7 +59,7 @@
                 @Html.DisplayFor(modelItem => item.Department)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Role)
+                @Html.DisplayFor(modelItem => item.RoleName)
             </td>
 
 
