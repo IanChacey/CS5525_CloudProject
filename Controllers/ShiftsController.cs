@@ -392,21 +392,60 @@ namespace TimeKeepingApp.Controllers
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
 
             Shift s = await _context.Shift.FirstOrDefaultAsync(u => u.Id == id);
+            _context.Attach(s);
 
-            if (s.Status == ShiftStatus.Approved)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "This Shift is already approved");
-                return View();
+                
+
+                if (s.Status == ShiftStatus.Approved)
+                {
+                    ModelState.AddModelError("", "This Shift is already approved");
+                    return View("Details", s);
+                }
+                else if (s.Status == ShiftStatus.Ongoing)
+                {
+                    ModelState.AddModelError("", "This Shift is still ongoing");
+                    return View("Details", s);
+                }
+
+                s.Status = ShiftStatus.Approved;
+                await _context.SaveChangesAsync();
             }
-            else if (s.Status == ShiftStatus.Ongoing)
+            
+
+            return View("Details", s);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Deny(int id)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            Shift s = await _context.Shift.FirstOrDefaultAsync(u => u.Id == id);
+            _context.Attach(s);
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "This Shift is still ongoing");
-                return View();
+                if (s.Status == ShiftStatus.Rejected)
+                {
+                    ModelState.AddModelError("", "This Shift is already rejected");
+                    return View("Details", s);
+                }
+                else if (s.Status == ShiftStatus.Ongoing)
+                {
+                    ModelState.AddModelError("", "This Shift is still ongoing");
+                    return View("Details", s);
+                }
+
+                s.Status = ShiftStatus.Rejected;
+                await _context.SaveChangesAsync();
             }
 
-            s.Status = ShiftStatus.Approved;
 
-            return View();
+            return View("Details", s);
         }
 
         private bool ShiftExists(int id)
