@@ -1,10 +1,10 @@
-﻿@model IEnumerable<TimeKeepingApp.Models.Shift>
+﻿@model ShiftManagerShiftsViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>List of your Shifts</h1>
+<h1>List of All Employee Shifts</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,66 +13,87 @@
     <thead>
         <tr>
             @*<th>
-                    @Html.DisplayNameFor(model => model.EmployeeID)
-                </th>*@
+            @Html.DisplayNameFor(model => model.EmployeeID)
+        </th>*@
             @*<th>
-                    @Html.DisplayNameFor(model => model.Department)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Role)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EmployeeName)
-                </th>*@
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.ShiftStart)
+                @Html.DisplayNameFor(model => model.employeeList[0].EmployeeName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ShiftEnd)
+                @Html.DisplayNameFor(model => model.employeeList[0].EmployeeLastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location)
+                @Html.DisplayNameFor(model => model.sList[0].ShiftStart)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.sList[0].ShiftEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sList[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sList[0].Status)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.ShiftEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)*@
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @for(int i = 0; i < Model.nameList.Count; i++)
         {
-            <tr>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.EmployeeID)
-                    </td>*@
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.Department)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Role)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EmployeeName)
-                    </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.ShiftStart)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ShiftEnd)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            @*<td>
+            @Html.DisplayFor(modelItem => item.EmployeeID)
+        </td>*@
+            @*<td>
+            @Html.DisplayFor(modelItem => item.Department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeName)
+        </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => Model.nameList[i])
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.lastNameList[i])
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.sList[i].ShiftStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.sList[i].ShiftEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.sList[i].Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.sList[i].Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@Model.sList[i].Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.sList[i].Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@Model.sList[i].Id">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

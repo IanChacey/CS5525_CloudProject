@@ -21,10 +21,10 @@ namespace TimeKeepingApp.Models
 
         public int pageSize { get; set; } = 10;
 
-        public ShiftIndexViewModel(List<Shift> shifts,  List<Employee> employees = null)//DateTime start, DateTime end, int page = 1, string acct = "all")
+        public ShiftIndexViewModel(List<Shift> shifts)//,  List<Employee> employees = null)//DateTime start, DateTime end, int page = 1, string acct = "all")
         {
             sList = shifts;
-            employeeList = employees;
+            //employeeList = employees;
             //descSearch = desc;
             //fromDate = start;
             //toDate = end;

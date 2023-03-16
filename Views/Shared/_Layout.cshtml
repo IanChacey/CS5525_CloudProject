@@ -29,7 +29,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Shifts" asp-action="ClockOut">Clock Out</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Shifts" asp-action="Index">Shifts</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Shifts" asp-action="Index">Your Shifts</a>
                             </li>
                             @if(User.IsInRole("Admin") || User.IsInRole("Manager"))
                             {
