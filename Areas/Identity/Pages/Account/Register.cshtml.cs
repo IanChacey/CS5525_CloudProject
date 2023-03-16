@@ -118,6 +118,7 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
                 employee.EmployeeLastName = Input.EmployeeLastName;
                 employee.Department = "None";
                 employee.HourlyWage = 0.00f;
+                employee.RoleName = _roleManager.FindByIdAsync(employee.Role).Result.Name;
 
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
