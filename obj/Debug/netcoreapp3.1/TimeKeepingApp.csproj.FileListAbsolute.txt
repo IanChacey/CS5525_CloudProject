@@ -70,7 +70,6 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\TimeKeepingApp.Ra
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\TimeKeepingApp.RazorAssemblyInfo.cs
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\staticwebassets\TimeKeepingApp.StaticWebAssets.Manifest.cache
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\staticwebassets\TimeKeepingApp.StaticWebAssets.xml
-D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\scopedcss\bundle\TimeKeepingApp.styles.css
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\TimeKeepingApp.TagHelpers.input.cache
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\TimeKeepingApp.TagHelpers.output.cache
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\TimeKeepingApp.RazorCoreGenerate.cache
@@ -230,3 +229,4 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shift
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shifts\ClockOut.cshtml.g.cs
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Home\Dashboard.cshtml.g.cs
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\Razor\Views\Shifts\ManagerShifts.cshtml.g.cs
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Debug\netcoreapp3.1\scopedcss\bundle\TimeKeepingApp.styles.css
