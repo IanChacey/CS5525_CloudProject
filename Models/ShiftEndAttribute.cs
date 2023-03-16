@@ -29,7 +29,7 @@ namespace TimeKeepingApp.Models
                 return new ValidationResult(GetErrorMessage());
             }
 
-            return base.IsValid(value, validationContext);
+            return ValidationResult.Success;//base.IsValid(value, validationContext);
         }
     }
 }

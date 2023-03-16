@@ -91,16 +91,16 @@ namespace TimeKeepingApp.Controllers
             //DateTime fDate = DateTime.Parse(fromDate);
 
             IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
-                t => t.EmployeeID == user.Id)
+                t => t.EmployeeID == user.Id).OrderByDescending(t => t.ShiftStart)
                                         select t;
 
             List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
 
-            List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
-                .GroupBy(p => p.EmployeeID)
-                .Select(g => g.First())
-                .Select(x => new Employee { EmployeeID = x.EmployeeID })
-                .ToList();
+            //List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
+            //    .GroupBy(p => p.EmployeeID)
+            //    .Select(g => g.First())
+            //    .Select(x => new Employee { EmployeeID = x.EmployeeID })
+            //    .ToList();
 
             //if (actFilter != "all")
             //{
@@ -116,7 +116,7 @@ namespace TimeKeepingApp.Controllers
             //tDate = DateTime.Parse(toDate);
 
             ShiftIndexViewModel vmod = new ShiftIndexViewModel(
-                employees: employeeList,
+                //employees: employeeList,
                 shifts: sList
                 //start: fDate,
                 //end: tDate
@@ -149,11 +149,33 @@ namespace TimeKeepingApp.Controllers
 
             IQueryable<Employee> EmployeeIQ = from e in _context.Employee select e;
 
-            List<Employee> employeeList = await EmployeeIQ.AsNoTracking().ToListAsync();
+            List<Employee> employeeList = new List<Employee>();
+            foreach (var f in sList)
+            {
+                 employeeList.Add(EmployeeIQ.Where(p => p.EmployeeID == f.EmployeeID).FirstOrDefault());
 
-            ShiftIndexViewModel vmod = new ShiftIndexViewModel(
+            }
+            List<string> nameList = new List<string>(); 
+            List<string> lastNameList = new List<string>();
+            foreach (var l in employeeList)
+            {
+                nameList.Add(l.EmployeeName);
+                lastNameList.Add(l.EmployeeLastName);
+            }
+
+            var nameTup = new Tuple<List<string>, List<string>>(nameList, lastNameList);
+            var bigTup = new Tuple<List<Shift>, Tuple<List<string>, List<string>>>(sList, nameTup);
+
+            //foreach (var f in sList)
+            //{
+            //    )
+            //}
+
+            ShiftManagerShiftsViewModel vmod = new ShiftManagerShiftsViewModel(
                 employees: employeeList,
-                shifts: sList
+                shifts: sList,
+                firstName: nameList,
+                lastName: lastNameList
                 //start: fDate,
                 //end: tDate
                 //desc: descFilter,
@@ -162,7 +184,7 @@ namespace TimeKeepingApp.Controllers
                 );
 
 
-            return View("ManagerShifts", sList);//, vmod);
+            return View(vmod);//, vmod);
 
         }
 
@@ -350,8 +372,9 @@ namespace TimeKeepingApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager, Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, ShiftStart, ShiftEnd, Location")] Shift shift)
         {
+            var shiftOld = await _context.Shift.FindAsync(id);
             if (id != shift.Id)
             {
                 return NotFound();
@@ -361,7 +384,26 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    _context.Update(shift);
+                    //shift.ShiftStart = start;
+                    //shift.ShiftEnd = end;
+                    //shift.Location = loc;
+                    _context.Attach(shiftOld);
+                    if (shift.ShiftStart != null)
+                    {
+                        shiftOld.ShiftStart = shift.ShiftStart;
+                    }
+                    if (shift.ShiftEnd != null)
+                    {
+                        shiftOld.ShiftEnd = shift.ShiftEnd;
+                    }
+                    if (shift.Location != null)
+                    {
+                        shiftOld.Location = shift.Location;
+                    }
+
+                    //shiftOld.ShiftStart = shift.ShiftStart;
+                    //shiftOld.ShiftEnd = end;
+                    //shiftOld.Location = loc;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
