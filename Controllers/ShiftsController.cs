@@ -25,57 +25,6 @@ namespace TimeKeepingApp.Controllers
             _context = context;
             _userManager = userManager;
         }
-        //public async Task<IActionResult> FilterIndex(string actFilter, string descFilter, string fromDate, string toDate, string pageNumber)
-        //{
-        //    // Get user claim
-        //    var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-        //    string userID = claim.Value;
-        //    var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
-
-        //    // Parse date strings into date objects
-        //    DateTime tDate = DateTime.Parse(toDate).AddDays(1);
-
-        //    DateTime fDate = DateTime.Parse(fromDate);
-
-        //    IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
-        //        t => t.EmployeeID == user.Id
-        //        && t.ShiftStart >= fDate
-        //        && t.ShiftStart <= tDate).OrderByDescending(d => d.ShiftStart)
-        //                                            select t;
-
-        //    List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
-        //        .GroupBy(p => p.EmployeeID)
-        //        .Select(g => g.First())
-        //        .Select(x => new Employee { EmployeeID = x.EmployeeID })
-        //        .ToList();
-
-        //    //if (actFilter != "all")
-        //    //{
-        //    //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
-
-        //    //}
-        //    //if (!string.IsNullOrEmpty(descFilter))
-        //    //{
-        //    //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
-        //    //}
-
-        //    List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
-
-        //    tDate = DateTime.Parse(toDate);
-
-        //    ShiftIndexViewModel vmod = new ShiftIndexViewModel(
-        //        employees: employeeList,
-        //        shifts: sList,
-        //        start: fDate,
-        //        end: tDate
-        //        //desc: descFilter,
-        //        //page: int.Parse(pageNumber),
-        //        //acct: actFilter
-        //        );
-
-
-        //    return View("Index", vmod);//, vmod);
-        //}
 
         // GET: Shifts
         public async Task<IActionResult> Index()
@@ -84,11 +33,6 @@ namespace TimeKeepingApp.Controllers
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string userID = claim.Value;
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
-
-            // Parse date strings into date objects
-            //DateTime tDate = DateTime.Parse(toDate).AddDays(1);
-
-            //DateTime fDate = DateTime.Parse(fromDate);
 
             IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
                 t => t.EmployeeID == user.Id).OrderByDescending(t => t.ShiftStart)
@@ -102,27 +46,9 @@ namespace TimeKeepingApp.Controllers
             //    .Select(x => new Employee { EmployeeID = x.EmployeeID })
             //    .ToList();
 
-            //if (actFilter != "all")
-            //{
-            //    transactionIQ = transactionIQ.Where(t => t.actID == actFilter);
-
-            //}
-            //if (!string.IsNullOrEmpty(descFilter))
-            //{
-            //    transactionIQ = transactionIQ.Where(t => t.description.Contains(descFilter));
-            //}
-
-
-            //tDate = DateTime.Parse(toDate);
-
             ShiftIndexViewModel vmod = new ShiftIndexViewModel(
                 //employees: employeeList,
                 shifts: sList
-                //start: fDate,
-                //end: tDate
-                //desc: descFilter,
-                //page: int.Parse(pageNumber),
-                //acct: actFilter
                 );
 
 
@@ -137,11 +63,6 @@ namespace TimeKeepingApp.Controllers
             string userID = claim.Value;
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
 
-            // Parse date strings into date objects
-            //DateTime tDate = DateTime.Parse(toDate).AddDays(1);
-
-            //DateTime fDate = DateTime.Parse(fromDate);
-
             IQueryable<Shift> ShiftIQ = from t in _context.Shift.OrderByDescending(p => p.ShiftStart)
                                         select t;
 
@@ -150,48 +71,44 @@ namespace TimeKeepingApp.Controllers
             IQueryable<Employee> EmployeeIQ = from e in _context.Employee select e;
 
             List<Employee> employeeList = new List<Employee>();
-            foreach (var f in sList)
-            {
-                 employeeList.Add(EmployeeIQ.Where(p => p.EmployeeID == f.EmployeeID).FirstOrDefault());
 
-            }
+            var shiftRecord = from e in _context.Employee
+                              join s in _context.Shift on e.EmployeeID equals s.EmployeeID
+                              select new
+                              {
+                                  first = e.EmployeeName,
+                                  last = e.EmployeeLastName,
+                                  start = s.ShiftStart,
+                                  end = s.ShiftEnd,
+                                  loc = s.Location,
+                                  stat = s.Status
+                              };
+
+            //foreach (Shift f in sList)
+            //{
+            //     employeeList.Add(EmployeeIQ.Where(p => p.EmployeeID == f.EmployeeID).ToList());
+            //}
+
             List<string> nameList = new List<string>(); 
             List<string> lastNameList = new List<string>();
-            foreach (var l in employeeList)
+
+            foreach (var e in shiftRecord)
             {
-                nameList.Add(l.EmployeeName);
-                lastNameList.Add(l.EmployeeLastName);
+                nameList.Add(e.first);
+                lastNameList.Add(e.last);
             }
-
-            var nameTup = new Tuple<List<string>, List<string>>(nameList, lastNameList);
-            var bigTup = new Tuple<List<Shift>, Tuple<List<string>, List<string>>>(sList, nameTup);
-
-            //foreach (var f in sList)
-            //{
-            //    )
-            //}
 
             ShiftManagerShiftsViewModel vmod = new ShiftManagerShiftsViewModel(
                 employees: employeeList,
                 shifts: sList,
                 firstName: nameList,
                 lastName: lastNameList
-                //start: fDate,
-                //end: tDate
-                //desc: descFilter,
-                //page: int.Parse(pageNumber),
-                //acct: actFilter
                 );
 
 
             return View(vmod);//, vmod);
 
         }
-
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.Shift.ToListAsync());
-        //}
 
         // GET: Shifts/Details/5
         public async Task<IActionResult> Details(int? id)
