@@ -126,10 +126,62 @@ namespace TimeKeepingApp.Controllers
 
         }
 
+<<<<<<< Updated upstream
         //public async Task<IActionResult> Index()
         //{
         //    return View(await _context.Shift.ToListAsync());
         //}
+=======
+        public async Task<IActionResult> ManagerShifts()
+        {
+            //return View(await _context.Shift.ToListAsync());
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string userID = claim.Value;
+            var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+
+            IQueryable<Shift> ShiftIQ = from t in _context.Shift.OrderByDescending(p => p.ShiftStart)
+                                        select t;
+
+            List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+            //IQueryable<Employee> EmployeeIQ = from e in _context.Employee select e;
+
+            //List<Employee> employeeList = new List<Employee>();
+
+            ////employeeList = await EmployeeIQ.Where(u => u.EmployeeID == )
+
+            //foreach (var f in sList)
+            //{
+            //    employeeList.Add(await EmployeeIQ.Where(p => p.EmployeeID == f.EmployeeID).FirstOrDefaultAsync());
+            //}
+
+            List<string> nameList = new List<string>(); 
+            List<string> lastNameList = new List<string>();
+
+            for (int i = 0; i < sList.Count; i++)
+            {
+                nameList.Add(_context.Employee.Where(u => u.EmployeeID == sList[i].EmployeeID).FirstOrDefault().EmployeeName);
+                lastNameList.Add(_context.Employee.Where(u => u.EmployeeID == sList[i].EmployeeID).FirstOrDefault().EmployeeLastName);
+            }
+
+
+            ShiftManagerShiftsViewModel vmod = new ShiftManagerShiftsViewModel(
+                //employees: employeeList,
+                shifts: sList,
+                firstName: nameList,
+                lastName: lastNameList
+                //start: fDate,
+                //end: tDate
+                //desc: descFilter,
+                //page: int.Parse(pageNumber),
+                //acct: actFilter
+                );
+
+
+            return View(vmod);//, vmod);
+
+        }
+>>>>>>> Stashed changes
 
         // GET: Shifts/Details/5
         public async Task<IActionResult> Details(int? id)
