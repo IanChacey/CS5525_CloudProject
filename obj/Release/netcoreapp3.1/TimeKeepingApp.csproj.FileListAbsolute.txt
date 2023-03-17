@@ -229,4 +229,8 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\TimeKeepingApp.
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\TimeKeepingApp.pdb
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\TimeKeepingApp.genruntimeconfig.cache
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\Razor\Views\Shifts\ManagerShifts.cshtml.g.cs
-D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\scopedcss\bundle\TimeKeepingApp.styles.css
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\staticwebassets\TimeKeepingApp.StaticWebAssets.Pack.cache
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\staticwebassets\msbuild.TimeKeepingApp.Microsoft.AspNetCore.StaticWebAssets.props
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\staticwebassets\msbuild.build.TimeKeepingApp.props
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\staticwebassets\msbuild.buildMultiTargeting.TimeKeepingApp.props
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\staticwebassets\msbuild.buildTransitive.TimeKeepingApp.props
