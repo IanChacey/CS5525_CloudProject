@@ -121,7 +121,7 @@ namespace TimeKeepingApp.Controllers
                 {
                     emp.EmployeeID = old.EmployeeID;
                     var user = _userManager.FindByIdAsync(emp.EmployeeID).Result;
-                    var roleRemove = await _userManager.RemoveFromRoleAsync(user, old.Role);
+                    var roleRemove = await _userManager.RemoveFromRoleAsync(user, old.RoleName);
                     //emp.Role = role;
                     var roleAdd = await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(emp.EmployeeID).Result, _roleManager.FindByIdAsync(emp.Role).Result.Name);
 
