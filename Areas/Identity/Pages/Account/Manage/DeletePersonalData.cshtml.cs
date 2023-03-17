@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TimeKeepingApp.Data;
 using TimeKeepingApp.Models;
@@ -75,6 +77,18 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account.Manage
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
+
+            IQueryable<Shift> ShiftIQ = from t in _context.Shift.Where(
+                t => t.EmployeeID == user.Id).OrderByDescending(t => t.ShiftStart)
+                                        select t;
+
+            List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
+
+            foreach(Shift shift in sList)
+            {
+                _context.Shift.Remove(shift);
+            }
+
             _context.Employee.Remove(emp);
             var empResult = await _context.SaveChangesAsync();
             if (!result.Succeeded)

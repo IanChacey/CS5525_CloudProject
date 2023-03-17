@@ -113,7 +113,7 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
 
                 employee.EmployeeID = user.Id;
                 //employee.Role = _userManager.GetRolesAsync(user).ToString();
-                employee.Role = role.Name;
+                employee.Role = role.Id.ToString();
                 employee.EmployeeName = Input.EmployeeName;
                 employee.EmployeeLastName = Input.EmployeeLastName;
                 employee.Department = "None";
