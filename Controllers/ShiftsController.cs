@@ -72,41 +72,20 @@ namespace TimeKeepingApp.Controllers
 
             List<Employee> employeeList = new List<Employee>();
 
-            var shiftRecord = from e in _context.Employee
-                              join s in _context.Shift on e.EmployeeID equals s.EmployeeID
-                              select new
-                              {
-                                  first = e.EmployeeName,
-                                  last = e.EmployeeLastName,
-                                  start = s.ShiftStart,
-                                  end = s.ShiftEnd,
-                                  loc = s.Location,
-                                  stat = s.Status
-                              };
+            var shiftRecord = (from e in _context.Employee
+                               join s in _context.Shift on e.EmployeeID equals s.EmployeeID
+                               select new ShiftEmployeeJoin
+                               {
+                                   first = e.EmployeeName,
+                                   last = e.EmployeeLastName,
+                                   start = s.ShiftStart,
+                                   end = s.ShiftEnd,
+                                   loc = s.Location,
+                                   stat = s.Status,
+                                   id = s.Id
+                               }).OrderByDescending(p => p.start).ToList();
 
-            //foreach (Shift f in sList)
-            //{
-            //     employeeList.Add(EmployeeIQ.Where(p => p.EmployeeID == f.EmployeeID).ToList());
-            //}
-
-            List<string> nameList = new List<string>(); 
-            List<string> lastNameList = new List<string>();
-
-            foreach (var e in shiftRecord)
-            {
-                nameList.Add(e.first);
-                lastNameList.Add(e.last);
-            }
-
-            ShiftManagerShiftsViewModel vmod = new ShiftManagerShiftsViewModel(
-                employees: employeeList,
-                shifts: sList,
-                firstName: nameList,
-                lastName: lastNameList
-                );
-
-
-            return View(vmod);//, vmod);
+            return View(shiftRecord);//, vmod);
 
         }
 
