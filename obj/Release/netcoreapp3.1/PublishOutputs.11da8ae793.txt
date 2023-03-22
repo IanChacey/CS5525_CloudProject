@@ -176,8 +176,6 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\runt
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\runtimes\win\lib\netcoreapp3.1\System.Security.Cryptography.Pkcs.dll
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\runtimes\win\lib\netcoreapp3.1\System.Text.Encoding.CodePages.dll
-D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\TimeKeepingApp.Views.dll
-D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\TimeKeepingApp.Views.pdb
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\css\site.css
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\favicon.ico
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\js\site.js
@@ -214,3 +212,5 @@ D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwr
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\lib\jquery\dist\jquery.min.js
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\lib\jquery\dist\jquery.min.map
 D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\Identity\lib\jquery\LICENSE.txt
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\TimeKeepingApp.Views.dll
+D:\UMKC\Cloud Computing\TimeKeepingApp\obj\Release\netcoreapp3.1\PubTmp\Out\TimeKeepingApp.Views.pdb

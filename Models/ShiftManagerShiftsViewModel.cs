@@ -21,7 +21,7 @@ namespace TimeKeepingApp.Models
         //public int pageNumber { get; set; }
         //public string account { get; set; }
 
-        public int pageSize { get; set; } = 10;
+        //public int pageSize { get; set; } = 10;
 
         //public IEnumerator res;
 
