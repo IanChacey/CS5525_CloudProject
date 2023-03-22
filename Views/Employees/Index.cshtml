@@ -61,18 +61,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.RoleName)
             </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.HourlyWage)
+            </td>
 
-
-            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            @if (User.IsInRole("Admin"))
             {
-                <td>
-                    @Html.DisplayFor(modelItem => item.HourlyWage)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
             }
         </tr>
         }
