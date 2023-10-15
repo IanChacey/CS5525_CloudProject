@@ -8,11 +8,6 @@ namespace TimeKeepingApp.Models
 {
     public class ShiftEndAttribute : ValidationAttribute
     {
-        //public ShiftEndAttribute(DateTime date)
-        //{
-        //    ShiftEnd
-        //}
-
         public string GetErrorMessage()
         {
             return "Shift End cannot be before Shift Start";
@@ -29,7 +24,7 @@ namespace TimeKeepingApp.Models
                 return new ValidationResult(GetErrorMessage());
             }
 
-            return ValidationResult.Success;//base.IsValid(value, validationContext);
+            return ValidationResult.Success;;
         }
     }
 }

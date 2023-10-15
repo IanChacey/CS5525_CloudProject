@@ -6,12 +6,12 @@
 
 <h1>Employees Index</h1>
 
-@if (User.IsInRole("Admin"))
+@*@if (User.IsInRole("Admin"))
 {
     <p>
         <a asp-action="Create">Create New</a>
     </p>
-}
+}*@
 
 <table class="table">
     <thead>
@@ -29,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.Department)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.DisplayNameFor(model => model.RoleName)
             </th>
 
             @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
@@ -59,20 +59,20 @@
                 @Html.DisplayFor(modelItem => item.Department)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Role)
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.HourlyWage)
             </td>
 
-
-            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            @if (User.IsInRole("Admin"))
             {
-                <td>
-                    @Html.DisplayFor(modelItem => item.HourlyWage)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
             }
         </tr>
         }

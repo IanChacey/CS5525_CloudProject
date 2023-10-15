@@ -112,12 +112,12 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
                 var employee = new Employee();
 
                 employee.EmployeeID = user.Id;
-                //employee.Role = _userManager.GetRolesAsync(user).ToString();
-                employee.Role = role.Name;
+                employee.Role = role.Id.ToString();
                 employee.EmployeeName = Input.EmployeeName;
                 employee.EmployeeLastName = Input.EmployeeLastName;
                 employee.Department = "None";
                 employee.HourlyWage = 0.00f;
+                employee.RoleName = _roleManager.FindByIdAsync(employee.Role).Result.Name;
 
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
@@ -137,11 +137,6 @@ namespace TimeKeepingApp.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     _sender.sendEmail(Input.Email, $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-
-
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

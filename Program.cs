@@ -23,7 +23,7 @@ namespace TimeKeepingApp
 
                 try
                 {
-                    SeedData.Initialize(services);
+                    //SeedData.Initialize(services);
                 }
                 catch (Exception ex)
                 {

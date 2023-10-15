@@ -1,4 +1,4 @@
-﻿@model ShiftManagerShiftsViewModel
+﻿@model List<ShiftEmployeeJoin>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,92 +6,56 @@
 
 <h1>List of All Employee Shifts</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            @*<th>
-            @Html.DisplayNameFor(model => model.EmployeeID)
-        </th>*@
-            @*<th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmployeeName)
-        </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.employeeList[0].EmployeeName)
+                @Html.DisplayNameFor(model => model[0].first)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.employeeList[0].EmployeeLastName)
+                @Html.DisplayNameFor(model => model[0].last)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.sList[0].ShiftStart)
+                @Html.DisplayNameFor(model => model[0].start)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.sList[0].ShiftEnd)
+                @Html.DisplayNameFor(model => model[0].end)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.sList[0].Location)
+                @Html.DisplayNameFor(model => model[0].loc)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.sList[0].Status)
-            </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.ShiftEnd)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)*@
+                @Html.DisplayNameFor(model => model[0].stat)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @for(int i = 0; i < Model.nameList.Count; i++)
+        @foreach(var item in Model)
         {
         <tr>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.EmployeeID)
-        </td>*@
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Department)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeName)
-        </td>*@
             <td>
-                @Html.DisplayFor(modelItem => Model.nameList[i])
+                @Html.DisplayFor(modelItem => item.first)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.lastNameList[i])
+                @Html.DisplayFor(modelItem => item.last)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.sList[i].ShiftStart)
+                @Html.DisplayFor(modelItem => item.start)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.sList[i].ShiftEnd)
+                @Html.DisplayFor(modelItem => item.end)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.sList[i].Location)
+                @Html.DisplayFor(modelItem => item.loc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.sList[i].Status)
+                @Html.DisplayFor(modelItem => item.stat)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@Model.sList[i].Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@Model.sList[i].Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@Model.sList[i].Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>
         }
