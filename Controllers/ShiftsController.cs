@@ -29,7 +29,6 @@ namespace TimeKeepingApp.Controllers
         // GET: Shifts
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.Shift.ToListAsync());
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string userID = claim.Value;
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
@@ -40,25 +39,17 @@ namespace TimeKeepingApp.Controllers
 
             List<Shift> sList = await ShiftIQ.AsNoTracking().ToListAsync();
 
-            //List<Employee> employeeList = ShiftIQ.AsNoTracking().ToList()
-            //    .GroupBy(p => p.EmployeeID)
-            //    .Select(g => g.First())
-            //    .Select(x => new Employee { EmployeeID = x.EmployeeID })
-            //    .ToList();
-
             ShiftIndexViewModel vmod = new ShiftIndexViewModel(
-                //employees: employeeList,
                 shifts: sList
                 );
 
 
-            return View("Index", sList);//, vmod);
+            return View("Index", sList);
 
         }
 
         public async Task<IActionResult> ManagerShifts()
         {
-            //return View(await _context.Shift.ToListAsync());
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string userID = claim.Value;
             var user = await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
@@ -85,7 +76,7 @@ namespace TimeKeepingApp.Controllers
                                    id = s.Id
                                }).OrderByDescending(p => p.start).ToList();
 
-            return View(shiftRecord);//, vmod);
+            return View(shiftRecord);
 
         }
 
@@ -124,7 +115,7 @@ namespace TimeKeepingApp.Controllers
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string userID = claim.Value;
-            var user = await _userManager.GetUserAsync(User);//await _context.Users.Where(u => u.Id == userID).FirstOrDefaultAsync();
+            var user = await _userManager.GetUserAsync(User);
 
 
 
@@ -141,14 +132,11 @@ namespace TimeKeepingApp.Controllers
 
             Shift s = new Shift();
 
-            //s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = DateTime.Now;
             s.ShiftEnd = null;
             s.Location = location;
             s.Status = ShiftStatus.Ongoing;
-
-            
 
             if (ModelState.IsValid)
             {
@@ -175,13 +163,9 @@ namespace TimeKeepingApp.Controllers
             && u.Status == ShiftStatus.Ongoing)
                 .FirstOrDefaultAsync();
 
-
             if (s != null)
             {
-                //s.EmployeeID = user.Id;
-                //s.ShiftStart = DateTime.Now;
                 s.ShiftEnd = DateTime.Now;
-                //s.Location = location;
                 s.Status = ShiftStatus.Pending;
             }
             else
@@ -197,22 +181,6 @@ namespace TimeKeepingApp.Controllers
             return View();
         }
 
-        // POST: Shifts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,EmployeeID,ShiftStart,ShiftEnd,Location")] Shift shift)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(shift);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(shift);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DateTime shiftStart, DateTime shiftEnd, string location)
@@ -224,7 +192,6 @@ namespace TimeKeepingApp.Controllers
 
             Employee emp = _context.Employee.Where(u => u.EmployeeID == user.Id).FirstOrDefault();
 
-            //s.Id = emp.Id;
             s.EmployeeID = user.Id;
             s.ShiftStart = shiftStart;
             s.ShiftEnd = shiftEnd;
@@ -280,9 +247,6 @@ namespace TimeKeepingApp.Controllers
             {
                 try
                 {
-                    //shift.ShiftStart = start;
-                    //shift.ShiftEnd = end;
-                    //shift.Location = loc;
                     _context.Attach(shiftOld);
                     if (shift.ShiftStart != null)
                     {
@@ -297,9 +261,6 @@ namespace TimeKeepingApp.Controllers
                         shiftOld.Location = shift.Location;
                     }
 
-                    //shiftOld.ShiftStart = shift.ShiftStart;
-                    //shiftOld.ShiftEnd = end;
-                    //shiftOld.Location = loc;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -347,12 +308,6 @@ namespace TimeKeepingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-
-            //if ( < shiftStart)
-            //{
-            //    ModelState.AddModelError(nameof(shiftEnd), "Shift End cannot be before Shift Start");
-            //}
-
             if (ModelState.IsValid)
             {
                 var shift = await _context.Shift.FindAsync(id);
@@ -375,8 +330,6 @@ namespace TimeKeepingApp.Controllers
 
             if (ModelState.IsValid)
             {
-                
-
                 if (s.Status == ShiftStatus.Approved)
                 {
                     ModelState.AddModelError("", "This Shift is already approved");
@@ -391,7 +344,6 @@ namespace TimeKeepingApp.Controllers
                 s.Status = ShiftStatus.Approved;
                 await _context.SaveChangesAsync();
             }
-            
 
             return View("Details", s);
         }
@@ -422,8 +374,6 @@ namespace TimeKeepingApp.Controllers
                 s.Status = ShiftStatus.Rejected;
                 await _context.SaveChangesAsync();
             }
-
-
             return View("Details", s);
         }
 

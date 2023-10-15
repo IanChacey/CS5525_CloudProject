@@ -9,18 +9,6 @@
 <table class="table">
     <thead>
         <tr>
-            @*<th>
-            @Html.DisplayNameFor(model => model.EmployeeID)
-        </th>*@
-            @*<th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmployeeName)
-        </th>*@
             <th>
                 @Html.DisplayNameFor(model => model[0].first)
             </th>
@@ -39,35 +27,13 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].stat)
             </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.ShiftEnd)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)*@
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @*@for(int i = 0; i < Model.nameList.Count; i++)*@
         @foreach(var item in Model)
         {
         <tr>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.EmployeeID)
-        </td>*@
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Department)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeName)
-        </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.first)
             </td>
