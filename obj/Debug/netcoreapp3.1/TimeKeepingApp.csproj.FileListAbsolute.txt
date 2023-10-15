@@ -1,5 +1,4 @@
 D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\appsettings.Development.json
-D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\appsettings.json
 D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\TimeKeepingApp.StaticWebAssets.xml
 D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\TimeKeepingApp.exe
 D:\UMKC\Cloud Computing\TimeKeepingApp\bin\Debug\netcoreapp3.1\TimeKeepingApp.deps.json
