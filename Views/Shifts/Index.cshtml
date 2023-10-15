@@ -12,18 +12,6 @@
 <table class="table">
     <thead>
         <tr>
-            @*<th>
-            @Html.DisplayNameFor(model => model.EmployeeID)
-        </th>*@
-            @*<th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmployeeName)
-        </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.ShiftStart)
             </th>
@@ -42,18 +30,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.EmployeeID)
-        </td>*@
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Department)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeName)
-        </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.ShiftStart)
             </td>
